@@ -1,0 +1,105 @@
+# CMakeLists.txt
+CMAKE_MINIMUM_REQUIRED(VERSION 3.15)
+PROJECT(wavefront-parser C)
+
+INCLUDE(${CMAKE_BINARY_DIR}/conan_toolchain.cmake)
+IF(EXISTS ${CMAKE_BINARY_DIR}/conan_deps.cmake)
+  INCLUDE(${CMAKE_BINARY_DIR}/conan_deps.cmake)
+ENDIF()
+
+SET(CMAKE_C_STANDARD 99)
+SET(CMAKE_C_STANDARD_REQUIRED ON)
+
+# Options
+OPTION(BUILD_TESTS "Build tests" ON)
+OPTION(BUILD_EXAMPLES "Build examples" ON)
+OPTION(ENABLE_ASAN "Enable AddressSanitizer" ON)
+
+# Source files
+SET(WAVEFRONT_SOURCES src/wavefront.c src/obj_parser.c src/mtl_parser.c
+                      src/lib.c src/log.c)
+
+# Create library
+ADD_LIBRARY(wavefront-parser ${WAVEFRONT_SOURCES})
+
+# Include directories
+TARGET_INCLUDE_DIRECTORIES(
+  wavefront-parser
+  PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+         $<INSTALL_INTERFACE:include>
+  PRIVATE src)
+
+# Link libraries (for Windows)
+IF(WIN32)
+  TARGET_LINK_LIBRARIES(wavefront-parser PRIVATE ws2_32)
+ENDIF()
+
+# ASan support
+IF(ENABLE_ASAN)
+  IF(CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID STREQUAL "Clang")
+    TARGET_COMPILE_OPTIONS(wavefront-parser PRIVATE -fsanitize=address
+                                                    -fno-omit-frame-pointer -g)
+    TARGET_LINK_OPTIONS(wavefront-parser PRIVATE -fsanitize=address)
+    SET(CMAKE_C_FLAGS
+        "${CMAKE_C_FLAGS} -fsanitize=address -fno-omit-frame-pointer -g")
+    SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address")
+    SET(CMAKE_SHARED_LINKER_FLAGS
+        "${CMAKE_SHARED_LINKER_FLAGS} -fsanitize=address")
+  ENDIF()
+ENDIF()
+
+# Installation
+INCLUDE(GNUInstallDirs)
+
+INSTALL(
+  TARGETS wavefront-parser
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+
+INSTALL(FILES include/wavefront.h include/log.h
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
+IF(BUILD_EXAMPLES)
+  ADD_SUBDIRECTORY(examples)
+ENDIF()
+
+# Tests
+IF(BUILD_TESTS)
+  ADD_SUBDIRECTORY(tests)
+ENDIF()
+
+# Package configuration
+INCLUDE(CMakePackageConfigHelpers)
+
+WRITE_BASIC_PACKAGE_VERSION_FILE(
+  "${CMAKE_CURRENT_BINARY_DIR}/wavefront-parser-config-version.cmake"
+  VERSION 1.0.0
+  COMPATIBILITY AnyNewerVersion)
+
+CONFIGURE_PACKAGE_CONFIG_FILE(
+  "${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/wavefront-parser-config.cmake"
+  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/wavefront-parser)
+
+IF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+  SET(CMAKE_INSTALL_PREFIX
+      "${CMAKE_SOURCE_DIR}/install"
+      CACHE PATH "Default install prefix" FORCE)
+ENDIF()
+
+INSTALL(
+  FILES "${CMAKE_CURRENT_BINARY_DIR}/wavefront-parser-config.cmake"
+        "${CMAKE_CURRENT_BINARY_DIR}/wavefront-parser-config-version.cmake"
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/wavefront-parser)
+
+INSTALL(
+  TARGETS wavefront-parser
+  EXPORT wavefront-parser-targets
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+
+INSTALL(
+  EXPORT wavefront-parser-targets
+  FILE wavefront-parser-targets.cmake
+  NAMESPACE wavefront-parser::
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/wavefront-parser)

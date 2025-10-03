@@ -1,0 +1,7 @@
+# Cube MTL file for testing
+newmtl white
+Ka 0.2 0.2 0.2
+Kd 1.0 1.0 1.0
+Ks 0.5 0.5 0.5
+Ns 10.0
+illum 2

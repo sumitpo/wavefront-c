@@ -1,0 +1,10 @@
+# conanfile.txt
+[requires]
+cmocka/1.1.7
+
+[generators]
+CMakeDeps
+CMakeToolchain
+
+[options]
+cmocka/*:shared=False

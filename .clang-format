@@ -1,0 +1,91 @@
+# .clang-format - Strict C Project Configuration
+
+# Base style: LLVM with C-specific adjustments
+BasedOnStyle: LLVM
+Language: C
+
+# Basic formatting
+IndentWidth: 2
+TabWidth: 2
+UseTab: Never
+ColumnLimit: 80
+MaxEmptyLinesToKeep: 1
+KeepEmptyLinesAtTheStartOfBlocks: false
+
+# Require newline at end of file
+InsertNewlineAtEOF: true
+
+# Function and control statements
+AllowShortFunctionsOnASingleLine: None
+AllowShortBlocksOnASingleLine: Never
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+IndentCaseLabels: false
+IndentGotoLabels: false
+
+# Pointer and reference alignment (C style)
+PointerAlignment: Left
+DerivePointerAlignment: false
+ReferenceAlignment: Pointer
+
+# Space handling
+SpacesInContainerLiterals: false
+SpacesInSquareBrackets: false
+SpaceAfterCStyleCast: false
+SpaceBeforeParens: ControlStatements
+SpaceAfterLogicalNot: false
+
+# Preprocessor directives
+IndentPPDirectives: AfterHash
+PPIndentWidth: 2
+
+# Consecutive alignment
+AlignConsecutiveAssignments:
+  Enabled: true
+  AcrossEmptyLines: false
+  AcrossComments: false
+  AlignCompound: false
+  PadOperators: true
+
+AlignConsecutiveDeclarations:
+  Enabled: true
+  AcrossEmptyLines: false
+  AcrossComments: false
+
+AlignConsecutiveMacros: true
+AlignConsecutiveBitFields: false
+AlignTrailingComments: true
+
+AlignArrayOfStructures: Left
+
+# Binary operators
+BreakBeforeBinaryOperators: NonAssignment
+
+# Function calls and definitions
+PenaltyBreakBeforeFirstCallParameter: 100
+PenaltyBreakString: 1000
+PenaltyBreakFirstLessLess: 1000
+
+# Include categories (for sorting)
+IncludeCategories:
+  - Regex: '^<.*\.h>'          # System headers: <stdio.h>
+    Priority: 1
+  - Regex: '^<.*>'             # Other system headers: <png.h>
+    Priority: 2
+  - Regex: '^".*"'             # Project headers: "raytracer.h"
+    Priority: 3
+
+# Sort includes
+SortIncludes: CaseSensitive
+
+# Disable C++ specific features
+Cpp11BracedListStyle: false
+FixNamespaceComments: false
+
+# Require braces for control statements
+AlwaysBreakAfterDefinitionReturnType: None
+AlwaysBreakAfterReturnType: None
+
+# Line breaking
+AllowAllArgumentsOnNextLine: false
+AllowAllParametersOfDeclarationOnNextLine: false

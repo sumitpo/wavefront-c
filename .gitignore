@@ -1,10 +1,55 @@
+# ======================
+# Build Directories
+# ======================
+build/
+_build/
+out/
+bin/
+lib/
+install/
+
+# ======================
+# IDE Directories
+# ======================
+.vscode/
+
+# ======================
+# CMake
+# ======================
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+cmake_install.cmake
+install_manifest.txt
+CTestTestfile.cmake
+_Deps/
+# CMake User Presets
+CMakeUserPresets.json
+
+# ======================
+# Conan
+# ======================
+# Conan local cache (if you use conan install . --output-folder=build)
+# But usually we DO commit conanfile.txt, so ignore only generated files
+conan.lock
+conanbuild.log
+conanbuildinfo.txt
+conaninfo.txt
+conanenv.txt
+conanrun.log
+conanrunenv.txt
+
+# Conan output folder (if named differently)
+conan/
+conan_cache/
+
 # Prerequisites
 *.d
 
 # Object files
 *.o
 *.ko
-*.obj
+# *.obj
 *.elf
 
 # Linker output

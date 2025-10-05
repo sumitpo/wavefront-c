@@ -13,9 +13,17 @@ ENDIF()
 SET(CMAKE_C_STANDARD 99)
 SET(CMAKE_C_STANDARD_REQUIRED ON)
 
+IF(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+  set(_default_build_tests ON)
+  set(_default_build_examples ON)
+else()
+  set(_default_build_tests OFF)
+  set(_default_build_examples OFF)
+ENDIF()
+
 # Options
-OPTION(BUILD_TESTS "Build tests" ON)
-OPTION(BUILD_EXAMPLES "Build examples" ON)
+OPTION(BUILD_TESTS "Build tests" ${_default_build_tests})
+OPTION(BUILD_EXAMPLES "Build examples" ${_default_build_examples})
 OPTION(ENABLE_ASAN "Enable AddressSanitizer" ON)
 
 # Source files

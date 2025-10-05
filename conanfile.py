@@ -8,6 +8,7 @@ import os
 class WavefrontParserConan(ConanFile):
     name = "wavefront-parser"
     description = "Complete Wavefront OBJ/MTL parser library for C"
+    version = "1.0.0"
     license = "MIT"
     url = "https://github.com/yourname/wavefront-parser"
     homepage = "https://github.com/yourname/wavefront-parser"

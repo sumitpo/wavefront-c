@@ -28,12 +28,11 @@ check_deps() {
 # build project
 build() {
 	echo " Building project..."
-	conan install . --output-folder="$BUILD_DIR" --build=missing
+	conan install . --output-folder="$PROJECT_ROOT" --build=missing
 	cmake --preset conan-release
 	cmake --build --preset conan-release
-	# cmake --build --preset conan-release -- VERBOSE=1
 
-	cmake --install "$BUILD_DIR"
+	cmake --install "$BUILD_DIR/Release" --prefix "$INSTALL_DIR"
 
 	echo " Build and install completed!"
 	# echo " Binary: $INSTALL_DIR/bin/raytracer"

@@ -1,10 +1,16 @@
 # examples/CMakeLists.txt
-ADD_EXECUTABLE(wavefront-example loader.c)
-TARGET_LINK_LIBRARIES(wavefront-example PRIVATE wavefront-parser)
+SET(TARGET_DEMO wavefront-example)
+ADD_EXECUTABLE(${TARGET_DEMO} loader.c)
+TARGET_LINK_LIBRARIES(${TARGET_DEMO} PRIVATE wavefront-parser)
 
 # ASan for example (if enabled in parent)
 IF(ENABLE_ASAN)
-  TARGET_COMPILE_OPTIONS(wavefront-example PRIVATE -fsanitize=address
+  TARGET_COMPILE_OPTIONS(${TARGET_DEMO} PRIVATE -fsanitize=address
                                                    -fno-omit-frame-pointer -g)
-  TARGET_LINK_OPTIONS(wavefront-example PRIVATE -fsanitize=address)
+  TARGET_LINK_OPTIONS(${TARGET_DEMO} PRIVATE -fsanitize=address)
 ENDIF()
+
+INSTALL(
+  TARGETS ${TARGET_DEMO}
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})

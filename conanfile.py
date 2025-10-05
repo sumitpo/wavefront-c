@@ -19,10 +19,14 @@ class WavefrontParserConan(ConanFile):
     options = {
         "shared": [True, False],
         "fPIC": [True, False],
+        "build_examples": [True, False],
+        "build_tests": [True, False],
     }
     default_options = {
         "shared": False,
         "fPIC": True,
+        "build_examples": True,
+        "build_tests": True,
     }
 
     # ====== 消费依赖（原 conanfile.txt 的内容）======
@@ -32,7 +36,13 @@ class WavefrontParserConan(ConanFile):
         self.requires("log4c/1.0.0@local/stable")
 
     # ====== 创建包的配置 ======
-    exports_sources = "CMakeLists.txt", "include/*", "src/*"
+    exports_sources = (
+        "CMakeLists.txt",
+        "include/*",
+        "src/*",
+        "Config.cmake.in",
+        "LICENSE",
+    )
 
     def config_options(self):
         if self.settings.os == "Windows":
@@ -61,11 +71,19 @@ class WavefrontParserConan(ConanFile):
 
     def build(self):
         cmake = CMake(self)
-        cmake.configure()
+        cmake.configure(
+            variables={
+                "WF_BUILD_EXAMPLES": "ON" if self.options.build_examples else "OFF",
+                "WF_BUILD_TESTS": "ON" if self.options.build_tests else "OFF",
+            }
+        )
         cmake.build()
 
         # 运行测试（如果启用）
-        if not self.conf.get("tools.build:skip_test", default=False):
+        if (
+            not self.conf.get("tools.build:skip_test", default=False)
+            and self.options.build_tests
+        ):
             print("test is enabled")
             cmake.test()
 

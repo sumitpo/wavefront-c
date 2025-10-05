@@ -27,6 +27,8 @@ _Deps/
 # CMake User Presets
 CMakeUserPresets.json
 
+.DS_Store
+
 # ======================
 # Conan
 # ======================

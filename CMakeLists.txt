@@ -13,17 +13,18 @@ ENDIF()
 SET(CMAKE_C_STANDARD 99)
 SET(CMAKE_C_STANDARD_REQUIRED ON)
 
+MESSAGE("[${CMAKE_PROJECT_NAME}] vs [${PROJECT_NAME}]")
 IF(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
-  set(_default_build_tests ON)
-  set(_default_build_examples ON)
-else()
-  set(_default_build_tests OFF)
-  set(_default_build_examples OFF)
+  SET(_default_build_tests ON)
+  SET(_default_build_examples ON)
+ELSE()
+  SET(_default_build_tests OFF)
+  SET(_default_build_examples OFF)
 ENDIF()
 
 # Options
-OPTION(BUILD_TESTS "Build tests" ${_default_build_tests})
-OPTION(BUILD_EXAMPLES "Build examples" ${_default_build_examples})
+OPTION(WF_BUILD_TESTS "Build tests" ${_default_build_tests})
+OPTION(WF_BUILD_EXAMPLES "Build examples" ${_default_build_examples})
 OPTION(ENABLE_ASAN "Enable AddressSanitizer" ON)
 
 # Source files
@@ -73,12 +74,12 @@ INSTALL(
 
 INSTALL(FILES include/wavefront.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
-IF(BUILD_EXAMPLES)
+IF(WF_BUILD_EXAMPLES)
   ADD_SUBDIRECTORY(examples)
 ENDIF()
 
 # Tests
-IF(BUILD_TESTS)
+IF(WF_BUILD_TESTS)
   ADD_SUBDIRECTORY(tests)
 ENDIF()
 

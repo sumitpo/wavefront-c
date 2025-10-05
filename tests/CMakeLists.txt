@@ -13,7 +13,8 @@ ENABLE_TESTING()
 ADD_EXECUTABLE(${TARGET_TEST} test_wavefront.c)
 
 # Link libraries
-TARGET_LINK_LIBRARIES(${TARGET_TEST} PRIVATE cmocka::cmocka wavefront-parser)
+TARGET_LINK_LIBRARIES(${TARGET_TEST} PRIVATE cmocka::cmocka wavefront-parser
+                                             log4c::log4c)
 
 # Include directories
 TARGET_INCLUDE_DIRECTORIES(${TARGET_TEST}

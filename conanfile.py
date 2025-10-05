@@ -29,6 +29,7 @@ class WavefrontParserConan(ConanFile):
     def requirements(self):
         # 你的项目依赖 cmocka（用于测试）
         self.requires("cmocka/1.1.7")
+        self.requires("log4c/1.0.0@local/stable")
 
     # ====== 创建包的配置 ======
     exports_sources = "CMakeLists.txt", "include/*", "src/*"

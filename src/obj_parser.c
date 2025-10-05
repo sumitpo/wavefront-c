@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "lib.h"
-#include "log.h"
+#include "log4c.h"
 #include "mtl_parser.h"
 
 static wf_error_t wf_handle_vertex(void* parser, const char* line);

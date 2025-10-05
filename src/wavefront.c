@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include "log.h"
+#include "log4c.h"
 #include "mtl_parser.h"
 #include "obj_parser.h"
 

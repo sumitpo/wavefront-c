@@ -20,7 +20,9 @@ OPTION(ENABLE_ASAN "Enable AddressSanitizer" ON)
 
 # Source files
 SET(WAVEFRONT_SOURCES src/wavefront.c src/obj_parser.c src/mtl_parser.c
-                      src/lib.c src/log.c)
+                      src/lib.c)
+
+FIND_PACKAGE(log4c CONFIG REQUIRED)
 
 # Create library
 ADD_LIBRARY(${TARGET} ${WAVEFRONT_SOURCES})
@@ -37,11 +39,13 @@ IF(WIN32)
   TARGET_LINK_LIBRARIES(${TARGET} PRIVATE ws2_32)
 ENDIF()
 
+TARGET_LINK_LIBRARIES(${TARGET} PRIVATE log4c::log4c)
+
 # ASan support
 IF(ENABLE_ASAN)
   IF(CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID STREQUAL "Clang")
     TARGET_COMPILE_OPTIONS(${TARGET} PRIVATE -fsanitize=address
-                                                    -fno-omit-frame-pointer -g)
+                                             -fno-omit-frame-pointer -g)
     TARGET_LINK_OPTIONS(${TARGET} PRIVATE -fsanitize=address)
     SET(CMAKE_C_FLAGS
         "${CMAKE_C_FLAGS} -fsanitize=address -fno-omit-frame-pointer -g")
@@ -59,8 +63,7 @@ INSTALL(
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
-INSTALL(FILES include/wavefront.h include/log.h
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+INSTALL(FILES include/wavefront.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 IF(BUILD_EXAMPLES)
   ADD_SUBDIRECTORY(examples)
@@ -90,10 +93,9 @@ IF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
       CACHE PATH "Default install prefix" FORCE)
 ENDIF()
 
-INSTALL(
-  FILES "${CMAKE_CURRENT_BINARY_DIR}/${TARGET}-config.cmake"
-        "${CMAKE_CURRENT_BINARY_DIR}/${TARGET}-config-version.cmake"
-  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${TARGET})
+INSTALL(FILES "${CMAKE_CURRENT_BINARY_DIR}/${TARGET}-config.cmake"
+              "${CMAKE_CURRENT_BINARY_DIR}/${TARGET}-config-version.cmake"
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${TARGET})
 
 INSTALL(
   TARGETS ${TARGET}

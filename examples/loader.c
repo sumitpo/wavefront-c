@@ -1,7 +1,7 @@
 // examples/loader.c
 #include <stdio.h>
 #include <stdlib.h>
-#include "log.h"
+#include "log4c.h"
 #include "wavefront.h"
 
 int main(int argc, char* argv[]) {

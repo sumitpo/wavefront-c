@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "lib.h"
-#include "log.h"
+#include "log4c.h"
 
 wf_error_t wf_mtl_parse_file(wf_mtl_parser_t* parser, const char* filename,
                              wf_material_t** materials, size_t* material_count,

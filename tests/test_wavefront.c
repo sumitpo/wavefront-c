@@ -7,7 +7,7 @@
 #include <string.h>
 
 #include <cmocka.h>
-#include "log.h"
+#include "log4c.h"
 #include "wavefront.h"
 
 // Test data

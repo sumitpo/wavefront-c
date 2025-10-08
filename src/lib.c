@@ -49,9 +49,17 @@ char* wf_trim(char* s) {
 float wf_parse_float(const char** s) {
   if (!s || !*s)
     return 0.0f;
+  const char* sPtr = *s;
+
+  while (*sPtr == ' ' || *sPtr == '\t') {
+    sPtr++;
+  }
   char* end;
-  float val = strtof(*s, &end);
-  *s        = end;
+  float val = strtof(sPtr, &end);
+  if (end != sPtr)
+    *s = end;
+  else
+    *s = sPtr;
   return val;
 }
 

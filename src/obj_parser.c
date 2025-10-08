@@ -22,30 +22,32 @@ static wf_error_t wf_handle_line_elem(void* parser, const char* line);
 static wf_error_t wf_handle_freeform(void* parser, const char* line);
 
 static const wf_command_t WF_COMMANDS[] = {
-  { "v ",      2, wf_handle_vertex    },
-  { "vt ",     3, wf_handle_texcoord  },
-  { "vn ",     3, wf_handle_normal    },
-  { "vp ",     3, wf_handle_parameter },
-  { "f ",      2, wf_handle_face      },
-  { "o ",      2, wf_handle_object    },
-  { "g ",      2, wf_handle_group     },
-  { "mtllib ", 7, wf_handle_mtllib    },
-  { "usemtl ", 7, wf_handle_usemtl    },
-  { "s ",      2, wf_handle_smoothing },
-  { "l ",      2, wf_handle_line_elem },
-  { "cstype ", 7, wf_handle_freeform  },
-  { "deg ",    4, wf_handle_freeform  },
-  { "bmat ",   5, wf_handle_freeform  },
-  { "step ",   5, wf_handle_freeform  },
-  { "curv ",   5, wf_handle_freeform  },
-  { "surf ",   5, wf_handle_freeform  },
-  { "parm ",   5, wf_handle_freeform  },
-  { "trim ",   5, wf_handle_freeform  },
-  { "hole ",   5, wf_handle_freeform  },
-  { "scrv ",   5, wf_handle_freeform  },
-  { "sp ",     3, wf_handle_freeform  },
-  { "end ",    4, wf_handle_freeform  },
-  { NULL,      0, NULL                }
+  // Longest commands first (to avoid prefix conflicts like "v" vs "vp")
+  { "usemtl", 6, wf_handle_usemtl    },
+  { "mtllib", 6, wf_handle_mtllib    },
+  { "cstype", 6, wf_handle_freeform  },
+  { "parm",   4, wf_handle_freeform  },
+  { "trim",   4, wf_handle_freeform  },
+  { "hole",   4, wf_handle_freeform  },
+  { "scrv",   4, wf_handle_freeform  },
+  { "surf",   4, wf_handle_freeform  },
+  { "curv",   4, wf_handle_freeform  },
+  { "bmat",   4, wf_handle_freeform  },
+  { "step",   4, wf_handle_freeform  },
+  { "deg",    3, wf_handle_freeform  },
+  { "end",    3, wf_handle_freeform  },
+  { "tex",    3, wf_handle_freeform  }, // if needed
+  { "vp",     2, wf_handle_parameter },
+  { "vt",     2, wf_handle_texcoord  },
+  { "vn",     2, wf_handle_normal    },
+  { "sp",     2, wf_handle_freeform  },
+  { "f",      1, wf_handle_face      },
+  { "o",      1, wf_handle_object    },
+  { "g",      1, wf_handle_group     },
+  { "s",      1, wf_handle_smoothing },
+  { "l",      1, wf_handle_line_elem },
+  { "v",      1, wf_handle_vertex    },
+  { NULL,     0, NULL                }
 };
 
 static void wf_set_error_with_line(wf_obj_parser_t* parser, const char* format,
@@ -329,7 +331,7 @@ static wf_error_t wf_handle_face(void* parser_ptr, const char* line) {
   }
   free(buf);
 
-  LOG_DEBUG("index count is %zu", idx_count);
+  // LOG_DEBUG("index count is %zu", idx_count);
 
   if (idx_count < 3) {
     free(indices);
@@ -361,10 +363,11 @@ static wf_error_t wf_handle_face(void* parser_ptr, const char* line) {
     for (size_t i = 0; i < tri_count; i++) {
       parser->current_object->faces[old_count + i] = tris[i];
     }
-    LOG_DEBUG("current face count is %zu", parser->current_object->face_count);
+    // LOG_DEBUG("current face count is %zu",
+    // parser->current_object->face_count);
     free(tris);
-    LOG_INFO("idx count is %zu, after triangulate get %zu faces", idx_count,
-             tri_count);
+    log_debug("idx count is %zu, after triangulate get %zu faces", idx_count,
+              tri_count);
   } else {
     wf_face face;
     for (size_t i = 0; i < 3 && i < idx_count; i++) {
@@ -428,6 +431,7 @@ static wf_error_t wf_handle_mtllib(void* parser_ptr, const char* line) {
   if (parser->current_mtl_dir) {
     size_t len = wf_strlen(parser->current_mtl_dir) + wf_strlen(mtl_path) + 1;
     full_path  = malloc(len);
+    full_path[len - 1] = '\0';
     if (full_path) {
       strcpy(full_path, parser->current_mtl_dir);
       strcat(full_path, mtl_path);
@@ -540,6 +544,9 @@ wf_error_t wf_obj_parse_file(wf_obj_parser_t* parser, const char* filename) {
       if (strncmp(line, cmd->command, cmd->command_len) == 0) {
         handler      = cmd->handler;
         handler_line = line + cmd->command_len;
+        while (*handler_line == ' ' || *handler_line == '\t') {
+          handler_line++;
+        }
         break;
       }
       cmd++;
@@ -553,8 +560,8 @@ wf_error_t wf_obj_parse_file(wf_obj_parser_t* parser, const char* filename) {
       wf_set_error_with_line(parser, "Unsupported command: %.50s", line);
       result = WF_ERROR_UNSUPPORTED_FEATURE;
     } else {
-      LOG_WARN("Ignoring unsupported command at line %zu: %.50s",
-               parser->line_number, line);
+      LOG_ERROR("Ignoring unsupported command at line %zu: %.50s",
+                parser->line_number, line);
     }
 
     if (result != WF_SUCCESS) {

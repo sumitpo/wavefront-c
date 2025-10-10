@@ -73,16 +73,16 @@ static int resolve_index(int idx, size_t count, int preserve_1_based) {
   if (preserve_1_based) {
     return idx;
   }
-  if (idx > count)
-    return -1;
-  if (idx + count < 0)
-    return -1;
-  if (idx > 0) {
-    return idx - 1; // 转换为 0-based
-  } else if (idx < 0) {
-    return (int)(count + idx); // 负索引处理
+  if (idx == 0) {
+    return -1; // 0 is invalid index
   }
-  return -1; // 0 是无效索引
+  if (idx > 0) {
+    int result = idx - 1;
+    return (result < (int)count) ? result : -1;
+  } else {
+    int result = (int)count + idx;
+    return (result >= 0 && result < (int)count) ? result : -1;
+  }
 }
 
 static wf_error_t wf_parse_face_index_helper(const char*      token,
@@ -216,6 +216,7 @@ static wf_error_t wf_handle_texcoord(void* parser_ptr, const char* line) {
   if (*s)
     vt.z = wf_parse_float(&s);
 
+  parser->scene->texcoord_count += 1;
   parser->scene->texcoords =
       wf_realloc_array(parser->scene->texcoords, &parser->scene->texcoord_cap,
                        parser->scene->texcoord_count, sizeof(wf_vec3));
@@ -238,6 +239,7 @@ static wf_error_t wf_handle_normal(void* parser_ptr, const char* line) {
   vn.y       = wf_parse_float(&s);
   vn.z       = wf_parse_float(&s);
 
+  parser->scene->normal_count += 1;
   parser->scene->normals =
       wf_realloc_array(parser->scene->normals, &parser->scene->normal_cap,
                        parser->scene->normal_count, sizeof(wf_vec3));

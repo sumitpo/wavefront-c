@@ -3,7 +3,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.15)
 SET(TARGET wavefront-parser)
 PROJECT(${TARGET} C)
 
-# 设置默认构建类型（重要！）
+# set default build type
 IF(NOT CMAKE_BUILD_TYPE)
   SET(CMAKE_BUILD_TYPE
       "Release"
@@ -52,16 +52,8 @@ TARGET_LINK_LIBRARIES(${TARGET} PRIVATE log4c::log4c)
 
 # ASan support
 IF(ENABLE_ASAN)
-  IF(CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID STREQUAL "Clang")
-    TARGET_COMPILE_OPTIONS(${TARGET} PRIVATE -fsanitize=address
-                                             -fno-omit-frame-pointer -g)
-    TARGET_LINK_OPTIONS(${TARGET} PRIVATE -fsanitize=address)
-    SET(CMAKE_C_FLAGS
-        "${CMAKE_C_FLAGS} -fsanitize=address -fno-omit-frame-pointer -g")
-    SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address")
-    SET(CMAKE_SHARED_LINKER_FLAGS
-        "${CMAKE_SHARED_LINKER_FLAGS} -fsanitize=address")
-  ENDIF()
+  TARGET_COMPILE_OPTIONS(${TARGET} PRIVATE -fsanitize=address -fno-omit-frame-pointer -g)
+  TARGET_LINK_OPTIONS(${TARGET} PRIVATE -fsanitize=address)
 ENDIF()
 
 # Installation

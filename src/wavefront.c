@@ -156,7 +156,7 @@ wf_error_t wf_scene_to_triangles(const wf_scene_t* scene, wf_face** triangles,
   return WF_SUCCESS;
 }
 
-// ANSI 颜色代码
+// ANSI color code
 #define WF_COLOR_RESET   "\x1b[0m"
 #define WF_COLOR_RED     "\x1b[31m"
 #define WF_COLOR_GREEN   "\x1b[32m"
@@ -166,7 +166,7 @@ wf_error_t wf_scene_to_triangles(const wf_scene_t* scene, wf_face** triangles,
 #define WF_COLOR_CYAN    "\x1b[36m"
 #define WF_COLOR_WHITE   "\x1b[37m"
 
-// 检查是否支持彩色输出
+// check if color output is supported
 static int wf_is_terminal() {
 #ifdef _WIN32
   return _isatty(_fileno(stderr));
@@ -175,7 +175,7 @@ static int wf_is_terminal() {
 #endif
 }
 
-// 打印带颜色的标题
+// print colored header
 static void wf_print_header(const char* title, const char* color) {
   if (wf_is_terminal()) {
     fprintf(stderr, "\n%s=== %s ===%s\n", color, title, WF_COLOR_RESET);
@@ -184,7 +184,7 @@ static void wf_print_header(const char* title, const char* color) {
   }
 }
 
-// 打印向量
+// print vector
 static void wf_print_vec3(const char* label, wf_vec3 v, const char* color) {
   if (wf_is_terminal()) {
     fprintf(stderr, "%s%s:%s (%.3f, %.3f, %.3f)\n", color, label,
@@ -194,7 +194,7 @@ static void wf_print_vec3(const char* label, wf_vec3 v, const char* color) {
   }
 }
 
-// 打印四维向量
+// print 4d vector
 static void wf_print_vec4(const char* label, wf_vec4 v, const char* color) {
   if (wf_is_terminal()) {
     fprintf(stderr, "%s%s:%s (%.3f, %.3f, %.3f, %.3f)\n", color, label,
@@ -341,6 +341,7 @@ void wf_print_scene(const wf_scene_t* scene, wf_print_options_t* opt) {
     wf_print_header("OBJECTS & FACES", WF_COLOR_MAGENTA);
     obj              = scene->objects;
     size_t obj_index = 0;
+    size_t global_face_index = 0;
     while (obj) {
       if (wf_is_terminal()) {
         fprintf(stderr, "%sObject %zu:%s %s (faces: %zu / %zu)\n",
@@ -361,7 +362,7 @@ void wf_print_scene(const wf_scene_t* scene, wf_print_options_t* opt) {
       size_t max_faces = (obj->face_count > 5) ? 5 : obj->face_count;
       for (size_t face_i = 0; face_i < max_faces; face_i++) {
         wf_face* face = &obj->faces[face_i];
-        fprintf(stderr, "  Face %zu: [", face_i);
+        fprintf(stderr, "  Face %zu|%zu : [", face_i, global_face_index + face_i);
         for (int v = 0; v < 3; v++) {
           wf_vertex_index idx = face->vertices[v];
           fprintf(stderr, "%d/%d/%d", idx.v_idx, idx.vt_idx, idx.vn_idx);
@@ -373,6 +374,7 @@ void wf_print_scene(const wf_scene_t* scene, wf_print_options_t* opt) {
       if (obj->face_count > 5) {
         fprintf(stderr, "  ... and %zu more faces\n", obj->face_count - 5);
       }
+      global_face_index += obj->face_count;
 
       obj = obj->next;
       obj_index++;

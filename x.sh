@@ -60,8 +60,8 @@ rebuild() {
 
 # main logic
 main() {
-	# check_deps  # 取消注释以启用依赖检查
-	case "${1:-build}" in
+	# check_deps  # uncomment to enable deps checking
+	case "${1:-rebuild}" in
 	build) build ;;
 	clean) clean ;;
 	rebuild) rebuild ;;

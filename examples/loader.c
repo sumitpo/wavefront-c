@@ -11,7 +11,8 @@ int main(int argc, char* argv[]) {
   }
 
   // Initialize logging
-  log_init(LOG_LEVEL_DEBUG);
+  // log_init(LOG_LEVEL_DEBUG);
+  log_init(LOG_LEVEL_WARN);
 
   const char*        filename = argv[1];
   wf_scene_t         scene;

@@ -29,13 +29,12 @@ class WavefrontParserConan(ConanFile):
         "build_tests": True,
     }
 
-    # ====== 消费依赖（原 conanfile.txt 的内容）======
     def requirements(self):
-        # 你的项目依赖 cmocka（用于测试）
+        # project depends on cmocka for testing
         self.requires("cmocka/1.1.7")
         self.requires("log4c/1.0.0@local/stable")
 
-    # ====== 创建包的配置 ======
+    # ====== configure for package ======
     exports_sources = (
         "CMakeLists.txt",
         "include/*",
@@ -61,7 +60,7 @@ class WavefrontParserConan(ConanFile):
         deps = CMakeDeps(self)
         deps.generate()
         tc = CMakeToolchain(self)
-        # 根据是否构建测试来设置选项
+        # set options based on whether to build test
         tc.variables["BUILD_TESTS"] = not self.conf.get(
             "tools.build:skip_test", default=False
         )
@@ -79,7 +78,7 @@ class WavefrontParserConan(ConanFile):
         )
         cmake.build()
 
-        # 运行测试（如果启用）
+        # run test if enable
         if (
             not self.conf.get("tools.build:skip_test", default=False)
             and self.options.build_tests

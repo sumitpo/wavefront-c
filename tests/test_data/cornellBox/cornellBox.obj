@@ -1,0 +1,155 @@
+# The original Cornell Box in OBJ format.
+# Optimized version: tallBox and shortBox as single objects
+# Each face's vertices defined immediately before the face
+#
+# Created by Guedis Cardenas and Morgan McGuire at Williams College, 2011
+# Released into the Public Domain.
+#
+
+mtllib cornellBox.mtl
+
+# Object floor
+o floor
+v -1.01 0.00 0.99
+v 1.00 0.00 0.99
+v 1.00 0.00 -1.04
+v -0.99 0.00 -1.04
+usemtl floor
+f -4 -3 -2 -1
+
+# Object ceiling
+o ceiling
+v -1.02 1.99 0.99
+v -1.02 1.99 -1.04
+v 1.00 1.99 -1.04
+v 1.00 1.99 0.99
+usemtl ceiling
+f -4 -3 -2 -1
+
+# Object backWall
+o backWall
+v -0.99 0.00 -1.04
+v 1.00 0.00 -1.04
+v 1.00 1.99 -1.04
+v -1.02 1.99 -1.04
+usemtl backWall
+f -4 -3 -2 -1
+
+# Object rightWall
+o rightWall
+v 1.00 0.00 -1.04
+v 1.00 0.00 0.99
+v 1.00 1.99 0.99
+v 1.00 1.99 -1.04
+usemtl rightWall
+f -4 -3 -2 -1
+
+# Object leftWall
+o leftWall
+v -1.01 0.00 0.99
+v -0.99 0.00 -1.04
+v -1.02 1.99 -1.04
+v -1.02 1.99 0.99
+usemtl leftWall
+f -4 -3 -2 -1
+
+# Object shortBox (single object with all faces)
+o shortBox
+# Top Face
+v 0.53 0.60 0.75
+v 0.70 0.60 0.17
+v 0.13 0.60 0.00
+v -0.05 0.60 0.57
+f -4 -3 -2 -1
+
+# Left Face
+v -0.05 0.00 0.57
+v -0.05 0.60 0.57
+v 0.13 0.60 0.00
+v 0.13 0.00 0.00
+f -4 -3 -2 -1
+
+# Front Face
+v 0.53 0.00 0.75
+v 0.53 0.60 0.75
+v -0.05 0.60 0.57
+v -0.05 0.00 0.57
+f -4 -3 -2 -1
+
+# Right Face
+v 0.70 0.00 0.17
+v 0.70 0.60 0.17
+v 0.53 0.60 0.75
+v 0.53 0.00 0.75
+f -4 -3 -2 -1
+
+# Back Face
+v 0.13 0.00 0.00
+v 0.13 0.60 0.00
+v 0.70 0.60 0.17
+v 0.70 0.00 0.17
+f -4 -3 -2 -1
+
+# Bottom Face
+v 0.53 0.00 0.75
+v 0.70 0.00 0.17
+v 0.13 0.00 0.00
+v -0.05 0.00 0.57
+f -4 -3 -2 -1
+
+usemtl shortBox
+
+# Object tallBox (single object with all faces)
+o tallBox
+# Top Face
+v -0.53 1.20 0.09
+v 0.04 1.20 -0.09
+v -0.14 1.20 -0.67
+v -0.71 1.20 -0.49
+f -4 -3 -2 -1
+
+# Left Face
+v -0.53 0.00 0.09
+v -0.53 1.20 0.09
+v -0.71 1.20 -0.49
+v -0.71 0.00 -0.49
+f -4 -3 -2 -1
+
+# Back Face
+v -0.71 0.00 -0.49
+v -0.71 1.20 -0.49
+v -0.14 1.20 -0.67
+v -0.14 0.00 -0.67
+f -4 -3 -2 -1
+
+# Right Face
+v -0.14 0.00 -0.67
+v -0.14 1.20 -0.67
+v 0.04 1.20 -0.09
+v 0.04 0.00 -0.09
+f -4 -3 -2 -1
+
+# Front Face
+v 0.04 0.00 -0.09
+v 0.04 1.20 -0.09
+v -0.53 1.20 0.09
+v -0.53 0.00 0.09
+f -4 -3 -2 -1
+
+# Bottom Face
+v -0.53 0.00 0.09
+v 0.04 0.00 -0.09
+v -0.14 0.00 -0.67
+v -0.71 0.00 -0.49
+f -4 -3 -2 -1
+
+usemtl tallBox
+
+# Object light
+o light
+v -0.24 1.98 0.16
+v -0.24 1.98 -0.22
+v 0.23 1.98 -0.22
+v 0.23 1.98 0.16
+usemtl light
+f -4 -3 -2 -1

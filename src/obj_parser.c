@@ -499,8 +499,18 @@ static wf_error_t wf_handle_usemtl(void* parser_ptr, const char* line) {
   if (result != WF_SUCCESS)
     return result;
 
-  free(parser->current_object->material_name);
-  parser->current_object->material_name = wf_strdup(line);
+  // free(parser->current_object->material_name);
+
+  // parser->current_object->material_name = wf_strdup(line);
+  parser->current_object->material_idx = -1;
+  wf_material_t* materials_list        = parser->scene->materials;
+  for (size_t i = 0; i < parser->scene->material_count; i++) {
+    if (!strncmp(materials_list[i].name, line,
+                 strlen(materials_list[i].name))) {
+      parser->current_object->material_idx = i;
+      break;
+    }
+  }
   LOG_DEBUG("Set material: %s", line);
   return WF_SUCCESS;
 }

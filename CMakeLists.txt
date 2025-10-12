@@ -52,7 +52,8 @@ TARGET_LINK_LIBRARIES(${TARGET} PRIVATE log4c::log4c)
 
 # ASan support
 IF(ENABLE_ASAN)
-  TARGET_COMPILE_OPTIONS(${TARGET} PRIVATE -fsanitize=address -fno-omit-frame-pointer -g)
+  TARGET_COMPILE_OPTIONS(${TARGET} PRIVATE -fsanitize=address
+                                           -fno-omit-frame-pointer -g)
   TARGET_LINK_OPTIONS(${TARGET} PRIVATE -fsanitize=address)
 ENDIF()
 

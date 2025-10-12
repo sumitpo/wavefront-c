@@ -80,7 +80,6 @@ void wf_free_scene(wf_scene_t* scene) {
     wf_object_t* next = obj->next;
     free(obj->name);
     free(obj->faces);
-    free(obj->material_name);
     free(obj);
     obj = next;
   }
@@ -147,6 +146,9 @@ wf_error_t wf_scene_to_triangles(const wf_scene_t* scene, wf_face** triangles,
   obj        = scene->objects;
   while (obj) {
     memcpy(&tris[idx], obj->faces, obj->face_count * sizeof(wf_face));
+    for (size_t i = 0; i < obj->face_count; i++) {
+      tris[idx + i].material_idx = obj->material_idx;
+    }
     idx += obj->face_count;
     obj = obj->next;
   }
@@ -339,8 +341,8 @@ void wf_print_scene(const wf_scene_t* scene, wf_print_options_t* opt) {
   // Print objects and faces
   if (object_count > 0) {
     wf_print_header("OBJECTS & FACES", WF_COLOR_MAGENTA);
-    obj              = scene->objects;
-    size_t obj_index = 0;
+    obj                      = scene->objects;
+    size_t obj_index         = 0;
     size_t global_face_index = 0;
     while (obj) {
       if (wf_is_terminal()) {
@@ -354,15 +356,19 @@ void wf_print_scene(const wf_scene_t* scene, wf_print_options_t* opt) {
                 obj->face_cap);
       }
 
-      if (obj->material_name) {
-        fprintf(stderr, "  Material: %s\n", obj->material_name);
+      if (-1 != obj->material_idx) {
+        fprintf(stderr, "  Material: %s, index: %zu\n",
+                scene->materials[obj->material_idx].name, obj->material_idx);
+      } else {
+        fprintf(stderr, "  Missing Material\n");
       }
 
       // Print first 5 faces
       size_t max_faces = (obj->face_count > 5) ? 5 : obj->face_count;
       for (size_t face_i = 0; face_i < max_faces; face_i++) {
         wf_face* face = &obj->faces[face_i];
-        fprintf(stderr, "  Face %zu|%zu : [", face_i, global_face_index + face_i);
+        fprintf(stderr, "  Face %zu|%zu : [", face_i,
+                global_face_index + face_i);
         for (int v = 0; v < 3; v++) {
           wf_vertex_index idx = face->vertices[v];
           fprintf(stderr, "%d/%d/%d", idx.v_idx, idx.vt_idx, idx.vn_idx);

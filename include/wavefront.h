@@ -58,6 +58,7 @@ typedef struct {
  */
 typedef struct {
   wf_vertex_index vertices[3]; /**< Triangle vertices */
+  size_t          material_idx;
 } wf_face;
 
 /**
@@ -105,12 +106,13 @@ typedef struct {
  * OBJ files can have multiple objects/groups
  */
 typedef struct wf_object_s {
-  char*               name;          /**< Object/group name */
-  wf_face*            faces;         /**< Array of faces */
-  size_t              face_count;    /**< Number of faces */
-  size_t              face_cap;      /**< Cap of faces */
-  char*               material_name; /**< Current material name */
-  struct wf_object_s* next;          /**< Next object in list */
+  char*    name;         /**< Object/group name */
+  wf_face* faces;        /**< Array of faces */
+  size_t   face_count;   /**< Number of faces */
+  size_t   face_cap;     /**< Cap of faces */
+  size_t   material_idx; /**< Current material idx */
+  // char*               material_name; /**< Current material name */
+  struct wf_object_s* next; /**< Next object in list */
 } wf_object_t;
 
 /**

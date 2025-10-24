@@ -312,6 +312,7 @@ void wf_print_scene(const wf_scene_t* scene, wf_print_options_t* opt) {
         wf_print_vec3("  Ka", mat->Ka, WF_COLOR_CYAN);
         wf_print_vec3("  Kd", mat->Kd, WF_COLOR_CYAN);
         wf_print_vec3("  Ks", mat->Ks, WF_COLOR_CYAN);
+        wf_print_vec3("  Ke", mat->Ke, WF_COLOR_CYAN);
         wf_print_vec4("  Tf", mat->Tf, WF_COLOR_CYAN);
         fprintf(stderr, "  Ns: %.3f, Ni: %.3f, d: %.3f, Tr: %.3f, illum: %d\n",
                 mat->Ns, mat->Ni, mat->d, mat->Tr, mat->illum);

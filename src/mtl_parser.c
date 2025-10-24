@@ -32,6 +32,12 @@ static void parse_material_property(wf_material_t* mat, const char* line) {
     mat->Kd.x     = wf_parse_float(&p);
     mat->Kd.y     = wf_parse_float(&p);
     mat->Kd.z     = wf_parse_float(&p);
+  } else if (strncmp(s, "Ke", 2) == 0
+             && (s[2] == ' ' || s[2] == '\t' || !s[2])) {
+    const char* p = wf_trim(s + 2);
+    mat->Ke.x     = wf_parse_float(&p);
+    mat->Ke.y     = wf_parse_float(&p);
+    mat->Ke.z     = wf_parse_float(&p);
   } else if (strncmp(s, "Ks", 2) == 0
              && (s[2] == ' ' || s[2] == '\t' || !s[2])) {
     const char* p = wf_trim(s + 2);

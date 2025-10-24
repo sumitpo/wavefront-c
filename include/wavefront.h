@@ -72,6 +72,7 @@ typedef struct {
   wf_vec3 Ka; /**< Ambient color */
   wf_vec3 Kd; /**< Diffuse color */
   wf_vec3 Ks; /**< Specular color */
+  wf_vec3 Ke; /**< Specular color */
   wf_vec4 Tf; /**< Transmission filter */
 
   /* Scalar properties */
